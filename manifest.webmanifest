@@ -1,0 +1,36 @@
+{
+  "name": "Stacks — Book Scanner & Dewey Desk",
+  "short_name": "Stacks",
+  "description": "Scan a book's ISBN barcode to get its Dewey Decimal equivalent, genre, audience and full catalogue details.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#f3eee3",
+  "theme_color": "#f3eee3",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["books", "education", "utilities"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

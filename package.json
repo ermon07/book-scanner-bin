@@ -1,0 +1,15 @@
+{
+  "name": "stacks-book-scanner",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Scan a book barcode to get its Dewey Decimal equivalent, genre and catalogue details.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test",
+    "icons": "node tools/generate-icons.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Stacks — Book Scanner &amp; Dewey Desk</title>
+  <meta name="description" content="Scan a book's ISBN barcode to get its catalogue record, Dewey Decimal equivalent, genre, audience and shelf-ready details.">
+  <meta name="theme-color" content="#f3eee3">
+  <meta name="application-name" content="Stacks">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Stacks">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231e4738'/%3E%3Cpath d='M18 20h9v25h-9z' fill='%23f3eee3'/%3E%3Cpath d='M30 16h9v29h-9z' fill='%23d8bb8a'/%3E%3Cpath d='M42 23h4v22h-4z' fill='%23f3eee3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="Stacks home">
+      <svg class="brand-mark" viewBox="0 0 44 44" aria-hidden="true">
+        <rect x="1" y="1" width="42" height="42" rx="6" fill="#1e4738"/>
+        <rect x="10" y="14" width="7" height="19" fill="#f3eee3"/>
+        <rect x="19" y="10" width="7" height="23" fill="#d8bb8a"/>
+        <rect x="28" y="16" width="4" height="17" fill="#f3eee3"/>
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">Stacks</span>
+        <span class="brand-sub">Dewey &amp; Genre Desk</span>
+      </span>
+    </a>
+
+    <button class="shelf-button" id="shelf-toggle" type="button" aria-expanded="false" aria-controls="shelf">
+      <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M3 4.5h5v12H3zM12 4.5h5v12h-5z" stroke-linejoin="round"/>
+        <path d="M5.5 7.5h0M14.5 7.5h0" stroke-linecap="round"/>
+      </svg>
+      <span>Shelf</span>
+      <span class="shelf-count is-zero" id="shelf-count">0</span>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow"><span class="eyebrow-rule"></span>Scan &middot; Identify &middot; Shelve</p>
+      <h1>Every book,<br><em>in its right place.</em></h1>
+      <p class="hero-copy">Scan the barcode on the back cover or type an ISBN. Stacks returns the catalogue record, a Dewey Decimal equivalent, genre and audience, and a shelf-ready record you can keep.</p>
+    </section>
+
+    <div class="workspace">
+      <aside class="panel scan-panel">
+        <div class="tabs" role="tablist" aria-label="Scan method">
+          <button class="tab is-active" type="button" role="tab" id="tab-camera" aria-selected="true" aria-controls="pane-camera" data-tab="camera">Camera</button>
+          <button class="tab" type="button" role="tab" id="tab-photo" aria-selected="false" aria-controls="pane-photo" tabindex="-1" data-tab="photo">Photo</button>
+          <button class="tab" type="button" role="tab" id="tab-manual" aria-selected="false" aria-controls="pane-manual" tabindex="-1" data-tab="manual">ISBN</button>
+        </div>
+
+        <div class="tab-pane is-active" id="pane-camera" role="tabpanel" aria-labelledby="tab-camera">
+          <div class="camera-shell">
+            <div id="camera-preview" class="camera-preview"></div>
+            <div class="camera-placeholder" id="camera-placeholder">
+              <svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4">
+                <path d="M6 16V9a3 3 0 0 1 3-3h7M32 6h7a3 3 0 0 1 3 3v7M42 32v7a3 3 0 0 1-3 3h-7M16 42H9a3 3 0 0 1-3-3v-7" stroke-linecap="round"/>
+                <rect x="15" y="18" width="18" height="12" rx="2"/>
+                <path d="M15 22h18M19 26v0M23 26v0M27 26v0" stroke-linecap="round"/>
+              </svg>
+              <p>Point the camera at the barcode<br>on the back of the book.</p>
+            </div>
+          </div>
+          <div class="pane-actions">
+            <button class="btn btn-primary" id="camera-start" type="button">Start camera</button>
+            <button class="btn btn-quiet" id="camera-stop" type="button" hidden>Stop camera</button>
+          </div>
+          <p class="hint" id="camera-hint">Hold the barcode inside the frame, about 15 cm away.</p>
+        </div>
+
+        <div class="tab-pane" id="pane-photo" role="tabpanel" aria-labelledby="tab-photo" hidden>
+          <label class="dropzone" id="dropzone">
+            <input type="file" id="photo-input" accept="image/*" hidden>
+            <span class="drop-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4">
+                <path d="M16 21V6m0 0-6 6m6-6 6 6" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M5 20v5a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2v-5" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <b>Drop a barcode photo</b>
+            <span>or click to choose an image</span>
+            <em class="drop-cta">Choose a photo</em>
+          </label>
+          <div class="file-preview" id="file-preview" hidden></div>
+          <p class="hint" id="photo-hint">A close, sharp photo of the ISBN barcode works best.</p>
+        </div>
+
+        <div class="tab-pane" id="pane-manual" role="tabpanel" aria-labelledby="tab-manual" hidden>
+          <form id="isbn-form" class="isbn-form" novalidate>
+            <label class="field-label" for="isbn-input">ISBN-10 or ISBN-13</label>
+            <div class="input-row">
+              <input id="isbn-input" name="isbn" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" placeholder="9780141439518" aria-describedby="isbn-error">
+              <button class="btn btn-primary" type="submit">Look up</button>
+            </div>
+            <p class="field-error" id="isbn-error" hidden></p>
+          </form>
+
+          <div class="examples">
+            <span class="examples-label">Try</span>
+            <button type="button" class="example" data-isbn="9780141439518">Pride &amp; Prejudice</button>
+            <button type="button" class="example" data-isbn="9780132350884">Clean Code</button>
+            <button type="button" class="example" data-isbn="9780062316097">Sapiens</button>
+            <button type="button" class="example" data-isbn="9780439708180">Harry Potter</button>
+          </div>
+
+          <p class="hint">Find the ISBN above the barcode. 13 digits, usually starting with 978.</p>
+        </div>
+      </aside>
+
+      <section class="panel result-panel is-empty" id="result-panel" aria-live="polite" aria-label="Book record">
+        <div class="empty-state">
+          <div class="empty-mark" aria-hidden="true"><span>823</span><em>Dewey</em></div>
+          <p class="eyebrow">The reading room</p>
+          <h2>A book, catalogued.</h2>
+          <p class="empty-lede">Scan the ISBN barcode on the back cover or type the number. Stacks returns the catalogue record, a Dewey Decimal equivalent, genre and audience &mdash; plus a shelf-ready summary.</p>
+          <ul class="empty-points">
+            <li><b>Dewey &amp; genre</b><span>Pulled from the catalogue, or estimated when the record is thin.</span></li>
+            <li><b>The full record</b><span>Cover, publisher, year, pages, language, subjects and links.</span></li>
+            <li><b>Your shelf</b><span>Saved in this browser and exportable as CSV.</span></li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <section class="panel shelf-panel" id="shelf" aria-label="Your shelf" hidden>
+      <header class="shelf-head">
+        <div>
+          <p class="eyebrow">Local record</p>
+          <h2>Your shelf</h2>
+        </div>
+        <div class="shelf-tools">
+          <button type="button" class="btn btn-quiet" id="shelf-export" disabled>Export CSV</button>
+          <button type="button" class="btn btn-quiet" id="shelf-clear" disabled>Clear shelf</button>
+        </div>
+      </header>
+      <ul id="shelf-list" class="shelf-grid"></ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <p class="footer-brand">Stacks</p>
+      <p>Metadata and covers from <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a>. Dewey numbers come from catalogue records where available; otherwise they are estimated from subjects and summaries. Treat estimates as a shelving aid, not an authoritative classification.</p>
+    </div>
+    <div class="footer-meta">
+      <p>Runs entirely in your browser &middot; Your shelf is stored locally</p>
+      <button type="button" class="install-link" id="install-open" hidden>Install Stacks on your phone</button>
+    </div>
+  </footer>
+
+  <div class="install-backdrop" id="install-backdrop" hidden></div>
+  <aside class="install-sheet" id="install-sheet" role="dialog" aria-modal="true" aria-labelledby="install-title" aria-describedby="install-copy" hidden>
+    <button class="install-close" id="install-close" type="button" aria-label="Close install prompt">
+      <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M5 5l10 10M15 5 5 15" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="install-head">
+      <img class="install-icon" src="icons/icon-192.png" alt="" width="52" height="52">
+      <div class="install-text">
+        <p class="install-kicker">Stacks on your phone</p>
+        <h2 id="install-title">Install the scanner</h2>
+        <p class="install-copy" id="install-copy">Keep the scanner one tap from your home screen &mdash; the app shell even opens offline.</p>
+      </div>
+    </div>
+    <p class="install-steps" id="install-steps" hidden></p>
+    <div class="install-actions">
+      <button class="btn btn-primary" id="install-accept" type="button">Install app</button>
+      <button class="btn btn-quiet" id="install-dismiss" type="button">Not now</button>
+    </div>
+  </aside>
+
+  <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="false"></div>
+
+  <noscript>
+    <p class="noscript-note">Stacks needs JavaScript for barcode scanning and catalogue lookups.</p>
+  </noscript>
+
+  <script defer src="vendor/html5-qrcode.min.js"></script>
+  <script defer src="js/isbn.js"></script>
+  <script defer src="js/ddc.js"></script>
+  <script defer src="js/genre.js"></script>
+  <script defer src="js/storage.js"></script>
+  <script defer src="js/api.js"></script>
+  <script defer src="js/scanner.js"></script>
+  <script defer src="js/app.js"></script>
+</body>
+</html>
