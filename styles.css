@@ -299,19 +299,13 @@ main {
 
 .camera-shell {
   position: relative;
+  width: 100%;
   aspect-ratio: 4 / 3;
   background: #101208;
   border: 1px solid #2b2d22;
   border-radius: 3px;
   overflow: hidden;
   --shell-height: 260px;
-
-  @media (max-width: 680px) {
-    aspect-ratio: 4 / 3;
-    height: min(280px, 42vw);
-    width: 100%;
-    margin: 0 auto;
-  }
 }
 
 .camera-shell::after {
@@ -2167,15 +2161,17 @@ body.install-open {
     border-radius: 3px;
     overflow: hidden;
     --shell-height: 260px;
-
-    @media (max-width: 420px) {
-      height: 240px;
-    }
   }
 
   .tab {
     flex: 1;
     padding-inline: 4px;
+  }
+}
+
+@media (max-width: 420px) {
+  .camera-shell {
+    height: 240px;
   }
 }
 
