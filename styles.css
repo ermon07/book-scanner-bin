@@ -304,6 +304,14 @@ main {
   border: 1px solid #2b2d22;
   border-radius: 3px;
   overflow: hidden;
+  --shell-height: 260px;
+
+  @media (max-width: 680px) {
+    aspect-ratio: 4 / 3;
+    height: min(280px, 42vw);
+    width: 100%;
+    margin: 0 auto;
+  }
 }
 
 .camera-shell::after {
@@ -324,10 +332,12 @@ main {
 
 .camera-preview__scan_region {
   position: absolute !important;
-  inset: 0;
+  inset: 24px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 .camera-preview video {
@@ -335,6 +345,10 @@ main {
   height: 100% !important;
   object-fit: cover;
   display: block;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .camera-preview img {
@@ -2142,6 +2156,21 @@ body.install-open {
 
   .toast {
     max-width: none;
+  }
+
+  .camera-shell {
+    aspect-ratio: 4 / 3;
+    height: 260px;
+    width: 100%;
+    margin: 0 auto;
+    border: 1px solid #2b2d22;
+    border-radius: 3px;
+    overflow: hidden;
+    --shell-height: 260px;
+
+    @media (max-width: 420px) {
+      height: 240px;
+    }
   }
 
   .tab {
