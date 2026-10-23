@@ -1980,7 +1980,7 @@ body.install-open {
   }
 
   .tab-pane {
-    padding: 16px;
+    padding: 16px 0;
   }
 
   .btn {

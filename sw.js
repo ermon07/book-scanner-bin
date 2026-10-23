@@ -1,5 +1,5 @@
 /* Stacks service worker — cache the app shell, never cache catalogue calls. */
-const VERSION = "stacks-shell-v7";
+const VERSION = "stacks-shell-v9";
 
 const SHELL = [
   "./",
